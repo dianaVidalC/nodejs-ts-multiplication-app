@@ -1,24 +1,24 @@
 //Orquesta como va funcionar la aplicación de entrada
 
-import { CreateTable } from "../domain/use-cases/create-table.use-case";
-import { SaveFile } from "../domain/use-cases/save-file.use-case";
+import { CreateTable } from "../domain/use-cases/create-table.use-case.js";
+import { SaveFile } from "../domain/use-cases/save-file.use-case.js";
 
-interface RunOptions {
-    base        : number;
-    limit       : number;
-    showTable   : boolean;
-    name        : string;
-    destination : string;
+export interface RunOptions {
+    base: number;
+    limit: number;
+    showTable: boolean;
+    fileDestination: string;
+    fileName: string;
 }
 
 export class ServerApp {
-    static run({base, limit, showTable, name, destination }: RunOptions) {
+    static run({ base, limit, showTable, fileName, fileDestination }: RunOptions) {
         console.log('Server running...');
-        const table = new CreateTable().execute({base, limit});
+        const table = new CreateTable().execute({ base, limit });
         const wasCreated = new SaveFile().execute({
             fileContent: table,
-            fileDestination: destination,
-            fileName: name,
+            fileDestination,
+            fileName,
         });
         if (showTable) {
             // console.log('====================');
@@ -26,10 +26,6 @@ export class ServerApp {
             // console.log('====================');
             console.log(table);
         }
-        if (wasCreated) {
-            console.log('File created successfully');
-        } else {
-            console.log('Error creating file');
-        }
+        (wasCreated) ? console.log('File created successfully') : console.log('Error creating file');
     }
 }
